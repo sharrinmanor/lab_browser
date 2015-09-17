@@ -204,6 +204,7 @@ public class BrowserView {
                 back();        
             }      
         });
+        
         result.getChildren().add(myBackButton);
         // new style way to do set up callback (lambdas)
         myNextButton = makeButton("NextCommand", event -> next());
@@ -221,6 +222,12 @@ public class BrowserView {
     // make buttons for setting favorites/home URLs
     private Node makePreferencesPanel () {
         HBox result = new HBox();
+        
+        result.getChildren().add(makeButton("AddFavoriteCommand", event -> addFavorite()));
+        myFavorites = new ComboBox<String>();
+        myFavorites.setPromptText("Fave lists");
+        myFavorites.valueProperty().addListener((o, s1, s2) -> showFavorite(s2));
+        result.getChildren().add(myFavorites);
         result.getChildren().add(makeButton("SetHomeCommand", event -> {
             myModel.setHome();
             enableButtons();
