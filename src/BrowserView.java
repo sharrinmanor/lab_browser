@@ -91,13 +91,13 @@ public class BrowserView {
      * Display given URL.
      */
     public void showPage (String url) {
-        URL valid = myModel.go(url);
-        if (url != null) {
-            update(valid);
-        }
-        else {
-            showError("Could not load " + url);
-        }
+    	try {
+    		URL valid = myModel.go(url);
+    		update(valid);
+    	} catch (BrowserException e){
+    		showError(e.getMessage());
+    	}
+        
     }
 
     /**

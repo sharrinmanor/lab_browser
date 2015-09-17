@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 
 /**
@@ -15,12 +16,14 @@ import java.util.Map;
 public class BrowserModel {
     // constants
     public static final String PROTOCOL_PREFIX = "http://";
+    public static final String ERRORS_RESOURCE_PACKAGE = "resources/Errors";
     // state
     private URL myHome;
     private URL myCurrentURL;
     private int myCurrentIndex;
     private List<URL> myHistory;
     private Map<String, URL> myFavorites;
+    private ResourceBundle myErrorResources;
 
 
     /**
@@ -32,6 +35,7 @@ public class BrowserModel {
         myCurrentIndex = -1;
         myHistory = new ArrayList<>();
         myFavorites = new HashMap<>();
+        myErrorResources = ResourceBundle.getBundle(ERRORS_RESOURCE_PACKAGE);
     }
 
     /**
@@ -42,7 +46,7 @@ public class BrowserModel {
             myCurrentIndex++;
             return myHistory.get(myCurrentIndex);
         }
-        return null;
+        throw new BrowserException(myErrorResources.getString("NextError"));
     }
 
     /**
@@ -53,7 +57,7 @@ public class BrowserModel {
             myCurrentIndex--;
             return myHistory.get(myCurrentIndex);
         }
-        return null;
+        throw new BrowserException(myErrorResources.getString("BackError"));
     }
 
     /**
@@ -119,7 +123,7 @@ public class BrowserModel {
         if (name != null && !name.equals("") && myFavorites.containsKey(name)) {
             return myFavorites.get(name);
         }
-        return null;
+        throw new BrowserException(myErrorResources.getString("NextError"));
     }
 
     // deal with a potentially incomplete URL
@@ -137,7 +141,7 @@ public class BrowserModel {
                     // e.g., let user leave off initial protocol
                     return new URL(PROTOCOL_PREFIX + possible);
                 } catch (MalformedURLException eee) {
-                    return null;
+                	 throw new BrowserException(myErrorResources.getString("BadURL"));
                 }
             }
         }
